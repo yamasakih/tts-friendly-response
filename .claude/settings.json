@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/speak.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
