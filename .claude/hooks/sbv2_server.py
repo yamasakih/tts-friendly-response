@@ -14,6 +14,7 @@
     afplay test.wav
 """
 
+import argparse
 import io
 import json
 import sys
@@ -38,18 +39,18 @@ STYLE_VEC_PATH = MODEL_DIR / "style_vectors.npy"
 JP_BERT_REPO = "ku-nlp/deberta-v2-large-japanese-char-wwm"
 
 
-def load_model() -> TTSModel:
+def load_model(device: str) -> TTSModel:
     print("Loading JP BERT tokenizer and model ...")
     bert_models.load_tokenizer(Languages.JP, pretrained_model_name_or_path=JP_BERT_REPO)
     bert_models.load_model(Languages.JP, pretrained_model_name_or_path=JP_BERT_REPO).float()
     print("JP BERT loaded.")
 
-    print(f"Loading TTS model from {MODEL_DIR} ...")
+    print(f"Loading TTS model from {MODEL_DIR} (device={device}) ...")
     model = TTSModel(
         model_path=MODEL_PATH,
         config_path=CONFIG_PATH,
         style_vec_path=STYLE_VEC_PATH,
-        device="cpu",
+        device=device,
     )
     model.load()
     print("TTS model loaded successfully.")
@@ -110,9 +111,21 @@ class TTSHandler(BaseHTTPRequestHandler):
         print(f"[TTS] {args[0]}")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Style-Bert-VITS2 TTS サーバー")
+    parser.add_argument(
+        "--device",
+        choices=["cpu", "mps", "cuda"],
+        default="cpu",
+        help="推論デバイス (default: cpu)",
+    )
+    return parser.parse_args()
+
+
 def main():
     global tts_model
-    tts_model = load_model()
+    args = parse_args()
+    tts_model = load_model(args.device)
 
     server = HTTPServer((HOST, PORT), TTSHandler)
     print(f"TTS server listening on http://{HOST}:{PORT}")
