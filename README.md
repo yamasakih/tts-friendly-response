@@ -68,7 +68,14 @@ print('Done')
 別ターミナルで以下を実行する（常駐させておく）。
 
 ```bash
+# CPU（デフォルト）
 ~/.claude/sbv2_venv/bin/python .claude/hooks/sbv2_server.py
+
+# macOS GPU (MPS)
+~/.claude/sbv2_venv/bin/python .claude/hooks/sbv2_server.py --device mps
+
+# NVIDIA GPU (CUDA)
+~/.claude/sbv2_venv/bin/python .claude/hooks/sbv2_server.py --device cuda
 ```
 
 初回起動時は BERT モデルのダウンロードが走るため数分かかる。2回目以降はキャッシュから読み込まれる。
@@ -103,7 +110,7 @@ print('Done')
 
 ### 読み上げ文字数の上限
 
-`speak.sh` の `MAX_CHARS` を変更する（デフォルト: 200 文字）。
+`speak.sh` の `MAX_CHARS` を変更する（デフォルト: 300 文字）。
 
 ### 音声スタイル
 
