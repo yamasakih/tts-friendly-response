@@ -7,7 +7,7 @@
 set -euo pipefail
 
 TTS_URL="http://127.0.0.1:5588/tts"
-MAX_CHARS=200
+MAX_CHARS=300
 TMPFILE=$(mktemp /tmp/claude_tts_XXXXXX).wav
 
 cleanup() {
